@@ -1,0 +1,49 @@
+Package: CRIO
+Type: Package
+Title: Risk and Gap Analysis for the CGIAR Research Investment Opportunities Report
+Version: 0.1.0
+Authors@R:
+    c(person(given = "Abhijeet",
+             family = "Mishra",
+             role = c("aut", "cre"),
+             email = "A.Mishra@cgiar.org",
+             comment = c(ORCID = "0000-0002-8287-9922")),
+      person(given = "Claude",
+             role = "aut",
+             comment = "AI coding assistant (Anthropic)"))
+Description: Reads IMPACT model scenario results (via GFSir) and builds the
+    risk and gap analysis used in the Research Investment Opportunities (RIO)
+    report: hunger, diet, nutrient adequacy and blue water indicators against
+    targets; pathway analysis across socioeconomic and climate scenarios;
+    maps, target trajectories and comparisons of Breeding For Tomorrow (B4T)
+    scenarios against the baseline.
+License: GPL (>= 3)
+Encoding: UTF-8
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.1.0)
+Imports:
+    collapse (>= 2.0.10),
+    data.table (>= 1.14.8),
+    dplyr (>= 1.1.4),
+    forcats (>= 1.0.1),
+    gamstransfer (>= 3.0.3),
+    GFSir (>= 5.1.3),
+    ggplot2 (>= 4.0.3),
+    ggpubr (>= 0.6.0),
+    maps (>= 3.4.2),
+    openxlsx2 (>= 1.9),
+    RColorBrewer (>= 1.1.3),
+    rlang (>= 1.1.6),
+    rpart,
+    rpart.plot (>= 3.1.5),
+    scales (>= 1.4.0),
+    sf (>= 1.1.0),
+    stats,
+    stringr (>= 1.6.0),
+    terra (>= 1.9.1),
+    tibble (>= 3.2.1),
+    tidyr (>= 1.3.1),
+    tidyterra (>= 0.6.1)
+Additional_repositories: https://ifpri.github.io/drat
