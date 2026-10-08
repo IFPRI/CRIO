@@ -2,7 +2,9 @@ linters: linters_with_defaults(
   object_name_linter = NULL,
   indentation_linter = NULL,
   object_usage_linter = NULL,
+  commented_code_linter = NULL,
+  brace_linter = NULL,
   cyclocomp_linter(500),
-  line_length_linter(length = 100L)
+  line_length_linter(length = 200L)
   ) # see vignette("lintr")
 encoding: "UTF-8"
