@@ -43,12 +43,17 @@ jobs:
           extra-repositories: 'https://ifpri.r-universe.dev'
 
       # Installs CRAN + r-universe dependencies, including system libraries
-      # for sf / terra (GDAL, GEOS, PROJ) on Ubuntu
+      # for sf / terra (GDAL, GEOS, PROJ) on Ubuntu.
+      # DOORMAT (via GFSir) requires devtools >= 2.4.5.9000 (development
+      # version), which needs development rcmdcheck / sessioninfo too, so all
+      # three come from GitHub instead of CRAN.
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: '"hard"'
           extra-packages: |
-            any::rcmdcheck
+            github::r-lib/devtools
+            github::r-lib/rcmdcheck
+            github::r-lib/sessioninfo
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
