@@ -1,3 +1,5 @@
+# CRIO 1.0.0
+
 # CRIO 0.1.0
 
 * First version, converted from the RIO report scripts `v3_risk_analysis_RIO.R` and `v3_gap-RIO.R`.

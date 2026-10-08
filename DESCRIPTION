@@ -1,7 +1,7 @@
 Package: CRIO
 Type: Package
 Title: Risk and Gap Analysis for the CGIAR Research Investment Opportunities Report
-Version: 0.1.0
+Version: 1.0.0
 Authors@R:
     c(person(given = "Abhijeet",
              family = "Mishra",
