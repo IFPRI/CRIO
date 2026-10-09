@@ -228,7 +228,7 @@ crio_plot_all <- function(fulldata,
     if (any(c("b4t_heatmap", "b4t_gap") %in% plots)) {
         message("B4T comparisons")
         b4t <- attempt("b4t comparisons", build_b4t_comparisons(
-            specs, target_year = target_year, baseline_id = baseline_id))
+            specs, target_year = target_year))
     }
 
     if ("b4t_heatmap" %in% plots && is.data.frame(b4t)) {
@@ -252,11 +252,11 @@ crio_plot_all <- function(fulldata,
             s <- specs[[k]]
             cmp <- b4t |> filter(indicator == k)
             attempt(paste("b4t_gap_closed", k), plot_b4t_gap_closed(
-                cmp, regions = regions, indicator_label = s$label,
+                cmp, regions = regions, indicator_label = s$label, baseline_id = baseline_id,
                 save = TRUE, outfile = file_for(k, "_B4T_gap_closed"), plotdir = d))
             if (!is.null(ctymap)) {
                 attempt(paste("b4t_gap_maps", k), plot_b4t_gap_maps(
-                    cmp, ctymap = ctymap, b4t_scenario = b4t_map_scenario,
+                    cmp, ctymap = ctymap, b4t_scenario = b4t_map_scenario, baseline_id = baseline_id,
                     direction = s$direction, gap_labeller = s$labeller,
                     delta_labeller = s$delta_labeller, indicator_label = s$label,
                     target_year = target_year,

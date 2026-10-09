@@ -40,7 +40,18 @@ row_countries <- c("ALB", "AUS", "AUT", "BGR", "BLR", "BLT", "BLX", "CAN", "CHP"
 .col_good <- "#1B9E77"
 .col_bad  <- "#A6761D"
 
-# Range bands by socioeconomic pathway
-.pathway_cols <- c("Sustainability" = "#4575B4",
+# Range bands by pathway (see default_pathways)
+.pathway_cols <- c("Green world" = "#1A9850",
+                   "Sustainability" = "#4575B4",
                    "Middle of the road" = "#FDAE61",
                    "Reference" = "grey50")
+
+# Colours for the pathways present: fixed colours for known ones, extra
+# colours for anything else (e.g. auto-named "SSP2-RCP4.5")
+.pathway_palette <- function(pathways) {
+    pathways <- unique(as.character(pathways))
+    extra <- setdiff(pathways, names(.pathway_cols))
+    extra_cols <- stats::setNames(
+        RColorBrewer::brewer.pal(8, "Set2")[(seq_along(extra) - 1) %% 8 + 1], extra)
+    c(.pathway_cols, extra_cols)
+}

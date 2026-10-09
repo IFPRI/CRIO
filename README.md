@@ -29,11 +29,31 @@ devtools::install("C:/EPTD/package_sources/CRIO")
 
 ## Scenarios
 
-| Set | Files | Notes |
+Any scenario named `SSP-GCM-RCP-suffix.gdx` is supported. Current RIO set:
+
+| Set | Files | Pathway (`default_pathways`) |
 |---|---|---|
-| Climate ensemble | `SSP{1,2,3}-{GFDL,IPSL,MPI,MRI,UKESM}-370-379` | RCP 7.0, no CO2 fertilization |
+| Climate ensemble | `SSP1-{GFDL,IPSL,MPI,MRI,UKESM}-126-379` | Green world |
+| | `SSP1-{...}-370-379` | Sustainability |
+| | `SSP2-{...}-370-379` | Middle of the road |
+| | `SSP3-{...}-370-379` | Reference |
 | Baseline | `SSP3-MRI-370-379` | `crio_baseline_id` |
 | B4T | `SSP3-MRI-370-{CWANA,ESA,LAC,SA,SEA,WCA,CG6}` | suffix = CG region where B4T is implemented; `CG6` = all CG regions |
+
+All runs are without CO2 fertilization (`-379`). SSP x RCP combinations not in
+`default_pathways` are named automatically (`"SSPx-RCPy"`). Each B4T run is
+compared with the climate run with the same SSP, GCM and RCP
+(`climate_counterpart()`), so B4T runs under other scenarios also work.
+
+```r
+# Only RCP 7.0 runs, without re-reading GDXs
+fulldata_70 <- select_scenarios(fulldata, rcp = "7.0")
+
+# Rename pathways / change classifications
+my_pathways <- default_pathways
+my_pathways$pathway[1] <- "SSP1 low emissions"
+fulldata <- relabel_scenarios(fulldata, pathways = my_pathways)
+```
 
 ## Usage
 

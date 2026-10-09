@@ -1,31 +1,32 @@
-#' Compare B4T scenarios with the baseline
+#' Compare B4T scenarios with their climate counterfactual
 #'
-#' Each B4T run against the baseline in `target_year`.
+#' Each B4T run against the climate run with the same SSP, GCM and RCP
+#' ([climate_counterpart()], e.g. `SSP3-MRI-370-WCA` vs `SSP3-MRI-370-379`)
+#' in `target_year`, so B4T runs under any scenario are handled.
 #' `gap` = distance from target (0 if met); `gap_closed` = share of the
-#' baseline gap closed by B4T (NA if the baseline already meets the target).
+#' counterfactual's gap closed by B4T (NA if it already meets the target).
 #'
-#' @param df Indicator data with scenario columns (baseline + B4T runs).
+#' @param df Indicator data with scenario columns (climate + B4T runs).
 #' @param value_col Column with the indicator value.
 #' @param threshold,threshold_col Fixed or dynamic target.
 #' @param direction `"below"` or `"above"` the target is good.
 #' @param target_year Year compared.
-#' @param baseline_id Baseline scenario id.
 #'
-#' @return One row per region x B4T run with baseline and B4T values, absolute
-#'   and percent change, gaps, gap closed and target status change.
+#' @return One row per region x B4T run with counterfactual (`base_id`,
+#'   `base_*`) and B4T values, absolute and percent change, gaps, gap closed
+#'   and target status change.
 #' @export
 build_b4t_comparison <- function(df,
                                  value_col,
                                  threshold = NULL,
                                  threshold_col = NULL,
                                  direction = c("below", "above"),
-                                 target_year = 2050,
-                                 baseline_id = crio_baseline_id) {
+                                 target_year = 2050) {
     direction <- match.arg(direction)
     .check_threshold(threshold, threshold_col)
 
     df_year <- df |>
-        filter(yrs == target_year, id == baseline_id | ensemble == "B4T") |>
+        filter(yrs == target_year) |>
         mutate(
             val = .data[[value_col]],
             thr = if (is.null(threshold_col)) threshold else .data[[threshold_col]],
@@ -33,13 +34,16 @@ build_b4t_comparison <- function(df,
             hits_target = as.integer(gap == 0)
         )
 
-    base <- df_year |>
-        filter(id == baseline_id) |>
-        select(region, base_val = val, base_gap = gap, base_hits = hits_target)
-
-    df_year |>
+    b4t_rows <- df_year |>
         filter(ensemble == "B4T") |>
-        left_join(base, by = "region") |>
+        mutate(base_id = climate_counterpart(id))
+
+    base <- df_year |>
+        filter(id %in% unique(b4t_rows$base_id)) |>
+        select(region, base_id = id, base_val = val, base_gap = gap, base_hits = hits_target)
+
+    b4t_rows |>
+        left_join(base, by = c("region", "base_id")) |>
         mutate(
             b4t = factor(b4t, levels = b4t_levels),
             delta = val - base_val,
@@ -51,7 +55,7 @@ build_b4t_comparison <- function(df,
                 .default = "No change"
             )
         ) |>
-        select(region, id, b4t, thr, base_val, val, delta, pct_change,
+        select(region, id, base_id, b4t, thr, base_val, val, delta, pct_change,
                base_gap, gap, gap_closed, base_hits, hits_target, status_change)
 }
 
@@ -80,7 +84,8 @@ build_b4t_comparisons <- function(specs, ...) {
 #' @param regions Region codes (rows).
 #' @param direction `"below"` or `"above"` the target is good (sets colours).
 #' @param delta_labeller,pct_labeller Label functions for absolute and percent change.
-#' @param baseline_id Baseline scenario id (subtitle).
+#' @param baseline_id Climate run whose B4T runs are shown (B4T runs are
+#'   compared with this run).
 #' @param title Plot title.
 #' @param save,outfile,plotdir,width,height Saving options.
 #'
@@ -105,7 +110,7 @@ plot_b4t_heatmap <- function(cmp,
     hi <- if (direction == "below") .col_bad else .col_good
 
     p <- cmp |>
-        filter(region %in% regions) |>
+        filter(region %in% regions, base_id == baseline_id) |>
         mutate(region = factor(region, levels = rev(regions)),
                tile_label = paste0(delta_labeller(delta), "\n(", pct_labeller(pct_change), ")")) |>
         ggplot(aes(x = b4t, y = region, fill = pct_change)) +
@@ -131,6 +136,7 @@ plot_b4t_heatmap <- function(cmp,
 #' @param cmp Output of [build_b4t_comparison()].
 #' @param regions Region codes (panels).
 #' @param indicator_label Indicator name for the y axis and title.
+#' @param baseline_id Climate run whose B4T runs are shown.
 #' @param title Plot title.
 #' @param save,outfile,plotdir,width,height Saving options.
 #'
@@ -139,16 +145,17 @@ plot_b4t_heatmap <- function(cmp,
 plot_b4t_gap_closed <- function(cmp,
                                 regions = c(b4t_regions, "WLD"),
                                 indicator_label = "target",
+                                baseline_id = crio_baseline_id,
                                 title = NULL,
                                 save = FALSE,
                                 outfile = NULL,
                                 plotdir = ".",
                                 width = 10,
                                 height = 6) {
-    title <- title %||% paste(indicator_label, "- gap closed by B4T (vs baseline)")
+    title <- title %||% paste0(indicator_label, " - gap closed by B4T (vs ", baseline_id, ")")
 
     p <- cmp |>
-        filter(region %in% regions) |>
+        filter(region %in% regions, base_id == baseline_id) |>
         mutate(region = factor(region, levels = regions)) |>
         ggplot(aes(x = b4t, y = gap_closed, fill = b4t == "All CG regions")) +
         geom_col() +
@@ -175,6 +182,7 @@ plot_b4t_gap_closed <- function(cmp,
 #' @param gap_labeller Label function for gaps.
 #' @param delta_labeller Label function for the change in value.
 #' @param indicator_label Indicator name for titles.
+#' @param baseline_id Climate run whose B4T runs are shown.
 #' @param target_year Year (titles).
 #' @param save,outfile,plotdir,width,height Saving options.
 #'
@@ -183,6 +191,7 @@ plot_b4t_gap_closed <- function(cmp,
 plot_b4t_gap_maps <- function(cmp,
                               ctymap,
                               b4t_scenario = "All CG regions",
+                              baseline_id = crio_baseline_id,
                               direction = c("below", "above"),
                               gap_labeller = scales::label_number(),
                               delta_labeller = scales::label_number(),
@@ -198,7 +207,7 @@ plot_b4t_gap_maps <- function(cmp,
     hi <- if (direction == "below") .col_bad else .col_good
 
     sel <- cmp |>
-        filter(b4t == b4t_scenario) |>
+        filter(b4t == b4t_scenario, base_id == baseline_id) |>
         mutate(base_gap_pos = if_else(base_gap > 0, base_gap, NA_real_),
                gap_pos = if_else(gap > 0, gap, NA_real_))
 

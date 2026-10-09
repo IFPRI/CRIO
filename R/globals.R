@@ -14,6 +14,6 @@ utils::globalVariables(c(
     "outcome", "cover", "rule", "cover_num", "total_cover", "n_rules", "rules",
     # plots and comparisons
     "val", "gap", "lo", "hi", "scenario", "indicator", "tile_label", "mean_val",
-    "delta", "pct_change", "base_val", "base_gap", "base_hits", "gap_closed",
+    "delta", "pct_change", "base_id", "base_val", "base_gap", "base_hits", "gap_closed",
     "status_change"
 ))

@@ -1,9 +1,9 @@
 #' Indicator trajectories against a target
 #'
 #' Line figure over time, one panel per region. Bands show the range across
-#' GCMs for each SSP (climate ensemble); the black line is the baseline;
-#' coloured lines are B4T runs (all under the baseline SSP/GCM); the dashed
-#' line is the target.
+#' GCMs for each pathway (SSP x RCP, climate ensemble); the black line is the
+#' baseline; coloured lines are the B4T runs built on the baseline (same SSP,
+#' GCM and RCP); the dashed line is the target.
 #'
 #' Note: if all GCMs give the same value (e.g. hunger at the model's floor),
 #' a band has zero width and is not visible.
@@ -65,7 +65,7 @@ plot_target_trajectories <- function(df,
 
     base <- d |> filter(id == baseline_id)
 
-    b4t_runs <- d |> filter(ensemble == "B4T")
+    b4t_runs <- d |> filter(ensemble == "B4T", climate_counterpart(id) == baseline_id)
 
     if (b4t_show == "own") {
         b4t_runs <- b4t_runs |>
@@ -83,7 +83,7 @@ plot_target_trajectories <- function(df,
         { if (!is.null(ref_value)) geom_hline(yintercept = ref_value, linetype = "dotted", colour = "grey30") } +
         geom_line(data = base, aes(x = year, y = val), colour = "black", linewidth = 1.2) +
         geom_line(data = b4t_runs, aes(x = year, y = val, colour = b4t), linewidth = 0.6) +
-        scale_fill_manual(values = .pathway_cols, name = "Range across GCMs") +
+        scale_fill_manual(values = .pathway_palette(band$pathway), name = "Range across GCMs") +
         scale_colour_manual(values = b4t_cols, name = paste0("B4T implemented in (", baseline_id, ")")) +
         scale_y_continuous(labels = value_labeller) +
         facet_wrap(~ region, scales = "free_y", labeller = as_labeller(.region_labels(regions, mapping))) +
@@ -161,7 +161,9 @@ plot_gap_overview <- function(specs,
         s <- specs[[k]]
         s$df |>
             filter(region %in% regions,
-                   id == baseline_id | b4t == "All CG regions" | b4t == own_cg_region(region, mapping)) |>
+                   id == baseline_id |
+                       (climate_counterpart(id) == baseline_id &
+                            (b4t == "All CG regions" | b4t == own_cg_region(region, mapping)))) |>
             mutate(
                 year = as.numeric(as.character(yrs)),
                 val = .data[[s$value_col]],
