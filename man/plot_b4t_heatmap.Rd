@@ -28,7 +28,8 @@ plot_b4t_heatmap(
 
 \item{delta_labeller, pct_labeller}{Label functions for absolute and percent change.}
 
-\item{baseline_id}{Baseline scenario id (subtitle).}
+\item{baseline_id}{Climate run whose B4T runs are shown (B4T runs are
+compared with this run).}
 
 \item{title}{Plot title.}
 

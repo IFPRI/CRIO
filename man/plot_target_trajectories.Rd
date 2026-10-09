@@ -60,9 +60,9 @@ A ggplot.
 }
 \description{
 Line figure over time, one panel per region. Bands show the range across
-GCMs for each SSP (climate ensemble); the black line is the baseline;
-coloured lines are B4T runs (all under the baseline SSP/GCM); the dashed
-line is the target.
+GCMs for each pathway (SSP x RCP, climate ensemble); the black line is the
+baseline; coloured lines are the B4T runs built on the baseline (same SSP,
+GCM and RCP); the dashed line is the target.
 }
 \details{
 Note: if all GCMs give the same value (e.g. hunger at the model's floor),

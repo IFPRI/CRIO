@@ -8,6 +8,7 @@ plot_b4t_gap_maps(
   cmp,
   ctymap,
   b4t_scenario = "All CG regions",
+  baseline_id = crio_baseline_id,
   direction = c("below", "above"),
   gap_labeller = scales::label_number(),
   delta_labeller = scales::label_number(),
@@ -26,6 +27,8 @@ plot_b4t_gap_maps(
 \item{ctymap}{Region map from \code{\link[=load_region_map]{load_region_map()}}.}
 
 \item{b4t_scenario}{B4T run to map (a CG region or \code{"All CG regions"}).}
+
+\item{baseline_id}{Climate run whose B4T runs are shown.}
 
 \item{direction}{\code{"below"} or \code{"above"} the target is good (sets colours of C).}
 

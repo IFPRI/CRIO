@@ -13,5 +13,5 @@ filter_climate(df)
 Filtered \code{df}.
 }
 \description{
-Drops B4T runs, leaving the SSP x GCM runs (including the baseline).
+Drops B4T runs, leaving the SSP x GCM x RCP runs (including the baseline).
 }

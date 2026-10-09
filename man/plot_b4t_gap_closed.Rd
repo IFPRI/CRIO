@@ -8,6 +8,7 @@ plot_b4t_gap_closed(
   cmp,
   regions = c(b4t_regions, "WLD"),
   indicator_label = "target",
+  baseline_id = crio_baseline_id,
   title = NULL,
   save = FALSE,
   outfile = NULL,
@@ -22,6 +23,8 @@ plot_b4t_gap_closed(
 \item{regions}{Region codes (panels).}
 
 \item{indicator_label}{Indicator name for the y axis and title.}
+
+\item{baseline_id}{Climate run whose B4T runs are shown.}
 
 \item{title}{Plot title.}
 

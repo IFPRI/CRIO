@@ -4,23 +4,38 @@
 \alias{add_scenario_cols}
 \title{Add scenario descriptor columns}
 \usage{
-add_scenario_cols(df, low_warming_gcms = c("GFDL", "MPI", "MRI"))
+add_scenario_cols(
+  df,
+  pathways = default_pathways,
+  low_warming_gcms = c("GFDL", "MPI", "MRI"),
+  lower_emission_rcps = "2.6"
+)
 }
 \arguments{
-\item{df}{Data with \code{id}, \code{ssp} and \code{gcm} columns.}
+\item{df}{Data with \code{id}, \code{ssp}, \code{gcm} and \code{rcp} columns.}
+
+\item{pathways}{Table of \code{ssp}, \code{rcp} and \code{pathway} names (default \link{default_pathways}).}
 
 \item{low_warming_gcms}{GCMs classed as "Low warming".}
+
+\item{lower_emission_rcps}{RCPs classed as "Lower emission".}
 }
 \value{
 \code{df} with the added columns.
 }
 \description{
 GFSir parses the 4th id segment into \code{co2}, so B4T suffixes land there.
-Everything is derived from \code{id} instead.
+Everything is derived from \code{id}, \code{ssp}, \code{gcm} and \code{rcp} instead.
 }
 \details{
-Adds \code{b4t} (\code{"None"}, a CG region, or \code{"All CG regions"}), \code{ensemble}
-(\code{"Climate"} or \code{"B4T"}), \code{pathway} (socioeconomic narrative), \code{warming}
-(low/high by GCM) and resets \code{co2} / \code{co2_fert} (all runs are without CO2
-fertilization).
+Adds:
+\describe{
+\item{\code{b4t}}{\code{"None"}, the CG region where B4T is implemented, or \code{"All CG regions"}.}
+\item{\code{ensemble}}{\code{"Climate"} or \code{"B4T"}.}
+\item{\code{pathway}}{Name of the SSP x RCP combination from \code{pathways}
+(e.g. \code{"Green world"}), or \code{"SSPx-RCPy"} if not listed.}
+\item{\code{warming}}{\code{"Lower emission"} for \code{lower_emission_rcps}; otherwise
+\code{"Low warming"} / \code{"High warming"} by GCM; \code{"No climate change"} for NoCC.}
+}
+and resets \code{co2} / \code{co2_fert} (all runs are without CO2 fertilization).
 }

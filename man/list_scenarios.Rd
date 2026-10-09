@@ -2,7 +2,7 @@
 % Please edit documentation in R/scenarios.R
 \name{list_scenarios}
 \alias{list_scenarios}
-\title{List RIO scenario GDX files}
+\title{List scenario GDX files}
 \usage{
 list_scenarios(scendir, include_nocc = FALSE)
 }
@@ -15,7 +15,9 @@ list_scenarios(scendir, include_nocc = FALSE)
 Character vector of full file paths.
 }
 \description{
-Climate runs are named \code{SSP-GCM-RCP-379} (no CO2 fertilization). B4T runs
-replace the last segment with the CG region where B4T is implemented
-(\code{CWANA}, \code{ESA}, ..., \code{CG6} = all CG regions).
+Climate runs are named \code{SSP-GCM-RCP-379} (no CO2 fertilization), e.g.
+\code{SSP1-GFDL-126-379} or \code{SSP3-MRI-370-379}. B4T runs replace the last
+segment with the CG region where B4T is implemented (\code{CWANA}, \code{ESA}, ...,
+\code{CG6} = all CG regions). Any SSP (1-5), GCM and RCP is picked up; you can
+also pass your own vector of files to the readers instead.
 }

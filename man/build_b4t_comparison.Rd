@@ -2,7 +2,7 @@
 % Please edit documentation in R/b4t.R
 \name{build_b4t_comparison}
 \alias{build_b4t_comparison}
-\title{Compare B4T scenarios with the baseline}
+\title{Compare B4T scenarios with their climate counterfactual}
 \usage{
 build_b4t_comparison(
   df,
@@ -10,12 +10,11 @@ build_b4t_comparison(
   threshold = NULL,
   threshold_col = NULL,
   direction = c("below", "above"),
-  target_year = 2050,
-  baseline_id = crio_baseline_id
+  target_year = 2050
 )
 }
 \arguments{
-\item{df}{Indicator data with scenario columns (baseline + B4T runs).}
+\item{df}{Indicator data with scenario columns (climate + B4T runs).}
 
 \item{value_col}{Column with the indicator value.}
 
@@ -24,15 +23,16 @@ build_b4t_comparison(
 \item{direction}{\code{"below"} or \code{"above"} the target is good.}
 
 \item{target_year}{Year compared.}
-
-\item{baseline_id}{Baseline scenario id.}
 }
 \value{
-One row per region x B4T run with baseline and B4T values, absolute
-and percent change, gaps, gap closed and target status change.
+One row per region x B4T run with counterfactual (\code{base_id},
+\verb{base_*}) and B4T values, absolute and percent change, gaps, gap closed
+and target status change.
 }
 \description{
-Each B4T run against the baseline in \code{target_year}.
+Each B4T run against the climate run with the same SSP, GCM and RCP
+(\code{\link[=climate_counterpart]{climate_counterpart()}}, e.g. \code{SSP3-MRI-370-WCA} vs \code{SSP3-MRI-370-379})
+in \code{target_year}, so B4T runs under any scenario are handled.
 \code{gap} = distance from target (0 if met); \code{gap_closed} = share of the
-baseline gap closed by B4T (NA if the baseline already meets the target).
+counterfactual's gap closed by B4T (NA if it already meets the target).
 }
