@@ -1,4 +1,4 @@
-# CRIO (development version)
+# CRIO 1.1.0
 
 * Scenarios are no longer tied to the RIO RCP 7.0 set:
   * `pathway` is named from SSP x RCP via `default_pathways` (SSP1-2.6 = "Green world");
